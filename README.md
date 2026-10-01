@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# ✋ AIR CANVAS
 
-Currently, two official plugins are available:
+**Draw in thin air. Your webcam tracks your hand, your index finger becomes a brush, and an AI buddy named Pip draws alongside you.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-Vite-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![MediaPipe](https://img.shields.io/badge/MediaPipe-Hand%20Tracking-0097A7?style=flat-square&logo=google&logoColor=white)
+![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-WASM-FF6F00?style=flat-square&logo=tensorflow&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude-AI%20Draw-D97757?style=flat-square&logo=anthropic&logoColor=white)
+![PeerJS](https://img.shields.io/badge/PeerJS-real--time%20collab-5A67D8?style=flat-square)
 
-## React Compiler
+<img src="docs/screenshots/canvas.jpg" width="880" alt="Air Canvas with rainbow, neon, spray, marker and dashed strokes" />
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<sub>Rainbow, neon, spray, marker and dashed brushes rendered by Air Canvas. The camera tile in the corner shows Chrome's test feed.</sub>
 
-## Expanding the ESLint configuration
+</div>
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## The idea
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+No stylus and no touchscreen. Just raise your hand. Air Canvas turns any laptop webcam into a gesture-controlled whiteboard that tracks your hand in real time in the browser, so you can sketch, move, resize and erase with nothing but your fingers.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Gestures
+
+| Gesture | Action |
+|---|---|
+| ☝️ **Index finger** | Draw |
+| 🤏 **Pinch** | Grab and move a stroke |
+| 🤏🤏 **Pinch with both hands** | Resize |
+| ✌️ **Two fingers / open palm** | Erase |
+
+Prefer to talk? **Voice commands** handle the rest: *"bigger"*, *"thinner"*, *"undo"*, *"clear"*, *"start over"*.
+
+## Features
+
+- 🎨 **Six brushes:** pen, marker, neon glow, rainbow, spray and dashed, with any colour, size and opacity.
+- 🔷 **Smart shapes:** rectangles, circles, triangles, stars, hearts, arrows and more, filled or outlined.
+- 🧸 **Pip, your AI drawing buddy:** Pip lives on its own half of the canvas, wanders around, reacts to your art, recognises the shapes you draw, and can **AI Draw** a sketch from a text prompt (powered by Claude). Pick Pip's style: Normal, Calligraphy, Funny, Sketch, Glow or Rainbow.
+- ✏️ **Portrait mode:** snaps a webcam frame and turns it into a pencil sketch.
+- 🤝 **Collaborate in real time:** host or join a room with a 6-character code and draw on the same board peer-to-peer. No server stores your drawings.
+
+<p align="center">
+  <img src="docs/screenshots/companion.jpg" width="49%" alt="Pip the AI drawing companion" />
+  <img src="docs/screenshots/collaborate.jpg" width="49%" alt="Real-time collaboration rooms" />
+</p>
+
+## How it's built
+
+```
+src/
+├── hooks/        useHandTracking (MediaPipe Hands + TF.js), useGestureState,
+│                 useDrawingState, useCollaboration (PeerJS), useVoiceCommands (Web Speech)
+├── components/   CanvasOverlay, HandLandmarksOverlay, ControlsPanel, tabs/ (Canvas · Collaborate · Companion · Settings)
+├── lib/          strokeUtils, shapeUtils, gestureUtils, companion (Pip), portrait (sketch filter)
+api/draw.ts       serverless endpoint: prompt → Claude → drawing instructions for Pip
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Run it
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm install
+npm run dev               # → http://localhost:5173 (allow camera access)
 ```
+
+For **AI Draw**, deploy `api/draw.ts` (e.g. on Vercel) with `ANTHROPIC_API_KEY` set.
+
+## About
+
+Built by **Roszhan Raj**.
